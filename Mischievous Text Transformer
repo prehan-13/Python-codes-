@@ -1,0 +1,35 @@
+from datetime import datetime
+
+def transform_text(text: str) -> str:
+    words = text.split()
+
+    for word in words:
+        clean = word.strip(",.!?;:")
+
+        digits = "".join(ch for ch in clean if ch.isdigit())
+        if len(digits) >= 10:
+            text = text.replace(clean, "[REDACTED]")
+
+        elif len(clean) == 10 and clean[4] == "-" and clean[7] == "-":
+            if clean[:4].isdigit() and clean[5:7].isdigit() and clean[8:].isdigit():
+                try:
+                    dt = datetime.strptime(clean, "%Y-%m-%d")
+                    pretty = dt.strftime("%d %B %Y")
+                    text = text.replace(clean, pretty)
+                except ValueError:
+                    pass
+
+        elif "@" in clean and "." in clean and not clean.startswith("@") and not clean.endswith("@"):
+            text = text.replace(clean, "[hidden email 📧]")
+
+    text = text.replace("Python", "🐍")
+    text = text.replace("Java", "☕")
+    text = text.replace("love", "❤️").replace("Love", "❤️")
+
+    return text
+
+sample = """Call me at 98123-45678 or 9812345678, 
+or email me at test@mail.com on 2025-08-23.
+I love Python more than Java!!!"""
+
+print(transform_text(sample))
