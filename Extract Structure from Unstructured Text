@@ -1,0 +1,42 @@
+text = """
+[1] Smith J. and Brown T., 2020. Advances in AI Research. Journal of Computer Science, 45(2), pp.123-134.
+[2] Lee P., 2018. A study on Deep Learning. International Journal of AI, 12(4), pp.55-70.
+[3] Johnson M., 2021. Quantum Computing: The Future. Computing Today, 33(7), pp.200-215.
+"""
+
+lines = [line.strip() for line in text.strip().split("\n") if line.strip()]
+
+results = []
+
+for line in lines:
+    index, parts = line.split("] ", 1)
+    index = index.strip("[]")
+
+    author, rest = parts.split(",", 1)
+
+    year, rest = rest.strip().split(".", 1)
+
+    title, rest = rest.strip().split(".", 1)
+
+    journal, rest = rest.strip().split(",", 1)
+
+    vol_issue, rest = rest.strip().split(",", 1)
+    volume = vol_issue.split("(")[0].strip()
+
+    issue = vol_issue.split("(")[1].strip(")")
+
+    pages = rest.replace("pp.", "").strip()
+
+    results.append({
+        "Index": index,
+        "Author": author.strip(),
+        "Year": year.strip(),
+        "Title": title.strip(),
+        "Journal": journal.strip(),
+        "Volume": volume,
+        "Issue": issue,
+        "Pages": pages
+    })
+
+for entry in results:
+    print(entry)
